@@ -1,0 +1,95 @@
+import React, { useEffect, useState } from 'react'
+import styles from './OrderDetails.module.scss'
+import { Link, useParams } from 'react-router-dom';
+import useFetchDocument from '../../../customHooks/useFetchDocument';
+import spinnerImg from '../../../assets/loader.gif'
+import ChangeOrderStatus from '../changeOrderStatus/ChangeOrderStatus';
+
+const OrderDetails = () => {
+    const { id } = useParams();
+    const [order, setOrder] = useState(null);
+    const { document } = useFetchDocument("orders", id)
+
+    useEffect(() => {
+        setOrder(document)
+    }, [document])
+
+    return (
+        <>
+            <div className={styles.table}>
+                <h2>All Orders</h2>
+                <div>
+                    <Link to="/admin/orders">&larr; Back to Orders</Link>
+                </div>
+                <br />
+                {order === null ? (
+                    <img
+                        src={spinnerImg}
+                        alt='loading...'
+                        style={{ width: '50px' }}
+                        className='--center --center-all'
+                    />
+                ) : (
+                    <>
+                        <p>
+                            <b>Order ID</b> {order.id}
+                        </p>
+                        <p>
+                            <b>Order Amount</b> {order.orderAmount}
+                        </p>
+                        <p>
+                            <b>Order Status</b> {order.orderStatus}
+                        </p>
+                        <p>
+                            <b>Shipping Address</b>
+                            <br />
+                            Address: {order.shippingAddress.line1},
+                            {order.shippingAddress.line2}, {order.shippingAddress.city}
+                            <br />
+                            State: {order.shippingAddress.state}
+                            <br />
+                            Country: {order.shippingAddress.country}
+                        </p>
+                        <br />
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {order.cartItems.map((cart, index) => {
+                                    const { id, name, price, imageURL, cartQuantity } = cart;
+                                    return (
+                                        <tr key={id}>
+                                            <td>
+                                                <b>{index + 1}</b>
+                                            </td>
+                                            <td>
+                                                <p>
+                                                    <b>{name}</b>
+                                                </p>
+                                                <img src={imageURL} alt={name} style={{ width: '100px' }} />
+                                            </td>
+                                            <td>{`$${price}`}</td>
+                                            <td>{cartQuantity}</td>
+                                            <td>
+                                                {`$${(price * cartQuantity).toFixed(2)}`}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </>
+                )} <ChangeOrderStatus order={order} id={id} />
+            </div>
+        </>
+    )
+}
+
+export default OrderDetails

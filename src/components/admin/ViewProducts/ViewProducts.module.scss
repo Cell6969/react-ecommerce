@@ -1,0 +1,52 @@
+.table {
+    padding: 5px;
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 20px;
+
+    .search {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .icons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &>* {
+            margin-right: 7px;
+            cursor: pointer;
+        }
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 1.4rem;
+
+
+        thead {
+            background-color: var(--light-blue);
+            color: white;
+        }
+
+        th,
+        td {
+            vertical-align: top;
+            text-align: left;
+            padding: 8px;
+
+            &.icons {
+                >* {
+                    margin-right: 5px;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        tr {
+            border-bottom: 1px solid #ccc;
+        }
+    }
+}
